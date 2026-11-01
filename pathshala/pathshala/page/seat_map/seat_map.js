@@ -129,7 +129,7 @@ class SeatMap {
 						<td>${frappe.utils.escape_html(b.student_name)}</td>
 						<td>${__(b.booking_type)}</td>
 						<td>${b.slot}</td>
-						<td>${frappe.datetime.str_to_user(b.to_date)}</td>
+						<td>${b.to_date ? frappe.datetime.str_to_user(b.to_date) : "—"}</td>
 						<td>${b.fee_due ? `<span class="indicator-pill red">${__("Due")}</span>` : `<span class="indicator-pill green">${__("Paid")}</span>`}</td>
 					</tr>`
 					)

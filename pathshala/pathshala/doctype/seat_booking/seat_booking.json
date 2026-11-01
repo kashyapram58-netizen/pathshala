@@ -2,7 +2,7 @@
  "actions": [],
  "allow_rename": 0,
  "autoname": "format:SB-{#####}",
- "creation": "2026-11-01 12:00:00.000000",
+ "creation": "2026-11-01 14:00:00.000000",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -18,12 +18,14 @@
   "zone",
   "seat",
   "column_break_2",
+  "seat_mode",
   "seat_type",
   "gender_policy",
   "section_plan",
   "plan",
   "booking_type",
   "shift",
+  "hours_per_day",
   "column_break_3",
   "from_date",
   "to_date",
@@ -34,6 +36,7 @@
   "hours",
   "amount",
   "discount",
+  "extra_charges",
   "column_break_4",
   "net_amount",
   "paid_amount",
@@ -114,24 +117,36 @@
    "reqd": 1
   },
   {
+   "description": "For Flexi plans this is the preferred zone (optional).",
    "fieldname": "zone",
    "fieldtype": "Link",
    "in_standard_filter": 1,
    "label": "Zone",
-   "options": "Study Zone",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.seat_mode!='Flexi'",
+   "options": "Study Zone"
   },
   {
+   "depends_on": "eval:doc.seat_mode!='Flexi'",
    "fieldname": "seat",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Seat",
-   "options": "Seat",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.seat_mode!='Flexi'",
+   "options": "Seat"
   },
   {
    "fieldname": "column_break_2",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "Fixed",
+   "description": "Flexi: a free seat is given at each check-in.",
+   "fieldname": "seat_mode",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Seat Mode",
+   "options": "Fixed\nFlexi",
+   "read_only": 1
   },
   {
    "fetch_from": "seat.seat_type",
@@ -174,6 +189,13 @@
    "fieldtype": "Link",
    "label": "Shift",
    "options": "Study Shift",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.hours_per_day",
+   "fieldname": "hours_per_day",
+   "fieldtype": "Float",
+   "label": "Hours per Day",
    "read_only": 1
   },
   {
@@ -237,6 +259,14 @@
    "label": "Discount"
   },
   {
+   "description": "Added automatically when daily hours are exceeded.",
+   "fieldname": "extra_charges",
+   "fieldtype": "Currency",
+   "label": "Overstay Charges",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
    "fieldname": "column_break_4",
    "fieldtype": "Column Break"
   },
@@ -285,7 +315,7 @@
  "index_web_pages_for_search": 0,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-01 12:00:00.000000",
+ "modified": "2026-11-01 14:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pathshala",
  "name": "Seat Booking",

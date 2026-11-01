@@ -2,7 +2,7 @@
  "actions": [],
  "allow_rename": 0,
  "autoname": "format:ATT-{#######}",
- "creation": "2026-11-01 12:00:00.000000",
+ "creation": "2026-11-01 14:00:00.000000",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -17,7 +17,14 @@
   "check_out",
   "duration_minutes",
   "source",
-  "auto_checked_out"
+  "seat_assignment",
+  "auto_checked_out",
+  "section_overstay",
+  "allowance_minutes",
+  "used_before_minutes",
+  "column_break_2",
+  "extra_minutes",
+  "extra_amount"
  ],
  "fields": [
   {
@@ -99,15 +106,56 @@
    "options": "Staff\nKiosk"
   },
   {
+   "fieldname": "seat_assignment",
+   "fieldtype": "Select",
+   "label": "Seat Given By",
+   "options": "\nBooking\nAuto\nStudent\nStaff",
+   "read_only": 1
+  },
+  {
    "fieldname": "auto_checked_out",
    "fieldtype": "Check",
    "label": "Auto Checked Out",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.allowance_minutes",
+   "fieldname": "section_overstay",
+   "fieldtype": "Section Break",
+   "label": "Daily Hours"
+  },
+  {
+   "fieldname": "allowance_minutes",
+   "fieldtype": "Int",
+   "label": "Daily Allowance (Minutes)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "used_before_minutes",
+   "fieldtype": "Int",
+   "label": "Used Earlier Today (Minutes)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "extra_minutes",
+   "fieldtype": "Int",
+   "label": "Overstay Billed (Minutes)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "extra_amount",
+   "fieldtype": "Currency",
+   "label": "Overstay Charge",
    "read_only": 1
   }
  ],
  "index_web_pages_for_search": 0,
  "links": [],
- "modified": "2026-11-01 12:00:00.000000",
+ "modified": "2026-11-01 14:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pathshala",
  "name": "Attendance Log",

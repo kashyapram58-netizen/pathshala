@@ -2,17 +2,21 @@
  "actions": [],
  "allow_rename": 0,
  "autoname": "field:plan_name",
- "creation": "2026-11-01 12:00:00.000000",
+ "creation": "2026-11-01 14:00:00.000000",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "plan_name",
   "booking_type",
   "shift",
+  "shift_type",
+  "hours_per_day",
+  "fixed_seat",
   "duration_months",
   "column_break_1",
   "rate",
   "security_deposit",
+  "extra_hour_rate",
   "is_active",
   "section_applicability",
   "branch",
@@ -48,6 +52,29 @@
    "options": "Study Shift"
   },
   {
+   "depends_on": "eval:doc.booking_type=='Shift'",
+   "fetch_from": "shift.shift_type",
+   "fieldname": "shift_type",
+   "fieldtype": "Data",
+   "label": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.shift_type=='Daily Hours'",
+   "fetch_from": "shift.hours_per_day",
+   "fieldname": "hours_per_day",
+   "fieldtype": "Float",
+   "label": "Hours per Day",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.booking_type=='Shift' && doc.shift_type=='Daily Hours'",
+   "description": "Premium: the student gets the same seat, held for them all day. If unchecked (Flexi), a free seat is given at each check-in.",
+   "fieldname": "fixed_seat",
+   "fieldtype": "Check",
+   "label": "Reserve a Fixed Seat"
+  },
+  {
    "default": "1",
    "depends_on": "eval:doc.booking_type!='Hourly'",
    "fieldname": "duration_months",
@@ -71,6 +98,13 @@
    "fieldname": "security_deposit",
    "fieldtype": "Currency",
    "label": "Security Deposit"
+  },
+  {
+   "depends_on": "eval:doc.shift_type=='Daily Hours'",
+   "description": "Charged when daily hours are exceeded. Leave blank to use the rate in Pathshala Settings.",
+   "fieldname": "extra_hour_rate",
+   "fieldtype": "Currency",
+   "label": "Overstay Rate per Hour"
   },
   {
    "default": "1",
@@ -113,7 +147,7 @@
  ],
  "index_web_pages_for_search": 0,
  "links": [],
- "modified": "2026-11-01 12:00:00.000000",
+ "modified": "2026-11-01 14:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pathshala",
  "name": "Seat Plan",

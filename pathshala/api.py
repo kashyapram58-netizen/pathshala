@@ -1,15 +1,19 @@
+import secrets
+
 import frappe
 from frappe import _
 from frappe.rate_limiter import rate_limit
 from frappe.utils import cint, today
 
-from pathshala.attendance import punch
+from pathshala.attendance import change_seat, free_seats, punch
 from pathshala.pathshala.doctype.student.student import QR_PREFIX
 from pathshala.utils import normalize_mobile
 
 STAFF_ROLES = {"System Manager", "Pathshala Manager", "Pathshala Staff"}
 MAX_PIN_FAILURES = 5
 LOCKOUT_SECONDS = 10 * 60
+SEAT_TOKEN_KEY = "pathshala:seat_token:"
+SEAT_TOKEN_SECONDS = 3 * 60
 
 
 def get_kiosk_branch(branch: str | None = None) -> str:
@@ -38,7 +42,48 @@ def kiosk_punch(mobile: str | None = None, pin: str | None = None, qr: str | Non
 		return {"status": "error", "message": _("Invalid mobile number or PIN.")}
 	if isinstance(student, dict):
 		return student
-	return punch(student, branch, source="Kiosk")
+	result = punch(student, branch, source="Kiosk")
+	log = result.pop("log", None)
+	if log:
+		# Lets the kiosk offer "Choose another seat" for this visit only, for a short time.
+		token = secrets.token_urlsafe(16)
+		frappe.cache.set_value(f"{SEAT_TOKEN_KEY}{token}", log, expires_in_sec=SEAT_TOKEN_SECONDS)
+		result["seat_token"] = token
+	return result
+
+
+def log_from_seat_token(token: str | None) -> str:
+	log = frappe.cache.get_value(f"{SEAT_TOKEN_KEY}{token}", expires=True) if token else None
+	if not log:
+		frappe.throw(_("Seat change timed out. Please ask the desk."))
+	return log
+
+
+@frappe.whitelist()
+def kiosk_free_seats(seat_token: str, branch: str | None = None):
+	branch = get_kiosk_branch(branch)
+	log = frappe.get_doc("Attendance Log", log_from_seat_token(seat_token))
+	if log.branch != branch:
+		raise frappe.PermissionError
+	booking = frappe.db.get_value(
+		"Seat Booking", log.booking, ["name", "plan", "zone", "hours_per_day", "seat_mode"], as_dict=True
+	)
+	stu = frappe.db.get_value("Student", log.student, ["name", "gender"], as_dict=True)
+	seats = free_seats(booking, stu, branch, frappe.utils.now_datetime(), exclude_log=log.name)
+	current = frappe.db.get_value("Seat", log.seat, ["name", "seat_no", "zone", "seat_type"], as_dict=True)
+	if current:
+		zone_name = frappe.db.get_value("Study Zone", current.zone, "zone_name")
+		seats = [dict(current, zone_name=zone_name, current=1)] + [s for s in seats if s["name"] != current.name]
+	return seats
+
+
+@frappe.whitelist(methods=["POST"])
+def kiosk_change_seat(seat_token: str, seat: str, branch: str | None = None):
+	branch = get_kiosk_branch(branch)
+	log_name = log_from_seat_token(seat_token)
+	if frappe.db.get_value("Attendance Log", log_name, "branch") != branch:
+		raise frappe.PermissionError
+	return change_seat(log_name, seat, assignment="Student")
 
 
 @frappe.whitelist()
@@ -80,10 +125,15 @@ def dashboard_stats() -> dict:
 		return frappe.db.sql(query, args)[0][0] or 0
 
 	seats_total = frappe.db.count("Seat", {"is_active": 1})
+	# Seats reserved by fixed bookings right now, plus seats Flexi students are sitting on.
 	seats_booked_now = scalar(
-		"""select count(distinct seat) from `tabSeat Booking`
-		where docstatus = 1 and status = 'Active' and from_date <= %s and to_date >= %s
-			and from_time <= %s and to_time > %s""",
+		"""select count(*) from (
+			select seat from `tabSeat Booking`
+			where docstatus = 1 and status = 'Active' and ifnull(seat, '') != ''
+				and from_date <= %s and to_date >= %s and from_time <= %s and to_time > %s
+			union
+			select seat from `tabAttendance Log` where check_out is null and ifnull(seat, '') != ''
+		) s""",
 		date, date, time, time,
 	)
 	fees_due = sum(
