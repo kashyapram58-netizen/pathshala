@@ -1,0 +1,102 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-11-01 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_kiosk",
+  "block_entry_if_fee_due",
+  "enforce_shift_timing",
+  "early_entry_minutes",
+  "column_break_1",
+  "expiry_warning_days",
+  "duplicate_punch_seconds",
+  "kiosk_reset_seconds"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_kiosk",
+   "fieldtype": "Section Break",
+   "label": "Kiosk Rules"
+  },
+  {
+   "default": "1",
+   "fieldname": "block_entry_if_fee_due",
+   "fieldtype": "Check",
+   "label": "Block Entry if Fee Due"
+  },
+  {
+   "default": "1",
+   "description": "Block check-in outside the student's booked time window.",
+   "fieldname": "enforce_shift_timing",
+   "fieldtype": "Check",
+   "label": "Enforce Shift Timing"
+  },
+  {
+   "default": "15",
+   "fieldname": "early_entry_minutes",
+   "fieldtype": "Int",
+   "label": "Early Entry Allowed (Minutes)"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "3",
+   "fieldname": "expiry_warning_days",
+   "fieldtype": "Int",
+   "label": "Warn Before Expiry (Days)"
+  },
+  {
+   "default": "60",
+   "fieldname": "duplicate_punch_seconds",
+   "fieldtype": "Int",
+   "label": "Ignore Repeat Scan Within (Seconds)"
+  },
+  {
+   "default": "4",
+   "fieldname": "kiosk_reset_seconds",
+   "fieldtype": "Int",
+   "label": "Kiosk Result Screen (Seconds)"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-11-01 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pathshala",
+ "name": "Pathshala Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pathshala Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

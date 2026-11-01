@@ -1,0 +1,225 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "format:STU-{#####}",
+ "creation": "2026-11-01 12:00:00.000000",
+ "default_print_format": "Pathshala ID Card",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "full_name",
+  "gender",
+  "mobile",
+  "email",
+  "date_of_birth",
+  "preparing_for",
+  "column_break_1",
+  "photo",
+  "status",
+  "section_guardian",
+  "guardian_name",
+  "guardian_mobile",
+  "column_break_2",
+  "address",
+  "section_id",
+  "id_proof_type",
+  "column_break_3",
+  "id_proof",
+  "section_kiosk",
+  "kiosk_pin",
+  "column_break_4",
+  "qr_token",
+  "qr_code"
+ ],
+ "fields": [
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "label": "Full Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "gender",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Gender",
+   "options": "\nFemale\nMale\nOther",
+   "reqd": 1
+  },
+  {
+   "description": "10-digit mobile number. Used for kiosk check-in.",
+   "fieldname": "mobile",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "label": "Mobile",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "label": "Date of Birth"
+  },
+  {
+   "description": "e.g. UPSC, NEET, JEE, Bank PO",
+   "fieldname": "preparing_for",
+   "fieldtype": "Data",
+   "label": "Preparing For"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "photo",
+   "fieldtype": "Attach Image",
+   "label": "Photo"
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Active\nInactive"
+  },
+  {
+   "fieldname": "section_guardian",
+   "fieldtype": "Section Break",
+   "label": "Guardian & Address"
+  },
+  {
+   "fieldname": "guardian_name",
+   "fieldtype": "Data",
+   "label": "Guardian Name"
+  },
+  {
+   "fieldname": "guardian_mobile",
+   "fieldtype": "Data",
+   "label": "Guardian Mobile"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_id",
+   "fieldtype": "Section Break",
+   "label": "ID Proof"
+  },
+  {
+   "fieldname": "id_proof_type",
+   "fieldtype": "Select",
+   "label": "ID Proof Type",
+   "options": "\nAadhaar\nPAN\nCollege ID\nDriving Licence\nOther"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "id_proof",
+   "fieldtype": "Attach",
+   "label": "ID Proof"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_kiosk",
+   "fieldtype": "Section Break",
+   "label": "Kiosk Access"
+  },
+  {
+   "description": "4-digit PIN for kiosk check-in. Auto-generated if left blank.",
+   "fieldname": "kiosk_pin",
+   "fieldtype": "Password",
+   "label": "Kiosk PIN",
+   "length": 4
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "qr_token",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "QR Token",
+   "no_copy": 1,
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "qr_code",
+   "fieldtype": "HTML",
+   "label": "QR Code"
+  }
+ ],
+ "image_field": "photo",
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-11-01 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pathshala",
+ "name": "Student",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pathshala Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pathshala Staff",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "full_name,mobile",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "full_name"
+}

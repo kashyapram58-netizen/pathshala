@@ -10,6 +10,22 @@ app_license = "mit"
 
 # required_apps = []
 
+app_logo_url = "/assets/pathshala/images/pathshala-icon-transparent.png"
+
+website_context = {
+	"favicon": "/assets/pathshala/images/pathshala-icon.png",
+	"splash_image": "/assets/pathshala/images/pathshala-logo-transparent.png",
+}
+
+add_to_apps_screen = [
+	{
+		"name": "pathshala",
+		"logo": "/assets/pathshala/images/pathshala-icon-transparent.png",
+		"title": "Pathshala",
+		"route": "/app/pathshala",
+	}
+]
+
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
 # 	{
@@ -25,7 +41,7 @@ app_license = "mit"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/pathshala/css/pathshala.css"
+app_include_css = "/assets/pathshala/css/desk.css"
 # app_include_js = "/assets/pathshala/js/pathshala.js"
 
 # include js, css files in header of web template
@@ -147,6 +163,23 @@ app_license = "mit"
 
 # Scheduled Tasks
 # ---------------
+
+scheduler_events = {
+	"daily": [
+		"pathshala.pathshala.doctype.seat_booking.seat_booking.expire_bookings",
+		"pathshala.pathshala.doctype.locker_allocation.locker_allocation.mark_overdue",
+	],
+	"hourly": ["pathshala.attendance.auto_check_out"],
+}
+
+after_migrate = "pathshala.setup.after_migrate"
+
+jinja = {
+	"methods": [
+		"pathshala.pathshala.doctype.student.student.qr_data_uri",
+		"pathshala.id_card.get_id_card_data",
+	]
+}
 
 # scheduler_events = {
 # 	"all": [

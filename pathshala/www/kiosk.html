@@ -1,0 +1,140 @@
+{% extends "templates/base.html" %}
+
+{%- block navbar -%}{%- endblock -%}
+{%- block footer -%}{%- endblock -%}
+
+{%- block style %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+	:root {
+		--k-bg: #0b1030;
+		--k-panel: rgba(255, 255, 255, 0.08);
+		--k-border: rgba(255, 255, 255, 0.14);
+		--k-key: rgba(255, 255, 255, 0.10);
+		--k-key-press: rgba(255, 255, 255, 0.22);
+		--k-text: #f5f7ff;
+		--k-muted: #aab4dc;
+		--k-accent: #3c6df5;
+		--k-accent-deep: #1e3cf4;
+		--k-teal: #6ccab7;
+		--k-lime: #adfc54;
+		--k-success: #12a26b;
+		--k-warning: #d98a06;
+		--k-error: #d93636;
+		--k-info: #3c6df5;
+	}
+	html, body { height: 100%; background: var(--k-bg) !important; color: var(--k-text); overflow: hidden; }
+	body { font-family: "Poppins", "Inter", system-ui, sans-serif; user-select: none; -webkit-user-select: none; }
+	.k-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden;
+		background: linear-gradient(135deg, #0b1030 0%, #0f1d55 55%, #0b2c2c 100%); }
+	.k-bg span { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .45; }
+	.k-bg .b1 { width: 480px; height: 480px; background: var(--k-accent); top: -160px; left: -120px; }
+	.k-bg .b2 { width: 380px; height: 380px; background: var(--k-teal); bottom: -140px; right: 6%; }
+	.k-bg .b3 { width: 260px; height: 260px; background: var(--k-lime); top: 40%; right: -90px; opacity: .3; }
+	.kiosk { position: relative; z-index: 1; height: 100vh; display: flex; flex-direction: column; }
+	.k-glass { background: var(--k-panel); border: 1px solid var(--k-border);
+		backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); }
+	.k-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 28px;
+		border-width: 0 0 1px 0 !important; }
+	.k-brand { display: flex; align-items: center; gap: 14px; font-size: 22px; font-weight: 700; letter-spacing: 2px; }
+	.k-brand img { width: 52px; height: 52px; object-fit: contain; background: #fff; border-radius: 14px; padding: 5px; }
+	.k-brand small { display: block; font-size: 13px; font-weight: 500; letter-spacing: 0; color: var(--k-muted); }
+	.k-clock { font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; }
+	.k-zones { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; padding: 12px 16px 0; }
+	.k-zone { background: var(--k-panel); border: 1px solid var(--k-border); border-radius: 999px; padding: 6px 14px; font-size: 14px; color: var(--k-muted); }
+	.k-zone b { color: var(--k-text); }
+	.k-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px; }
+	.k-card { width: 100%; max-width: 440px; text-align: center; }
+	.k-title { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+	.k-sub { color: var(--k-muted); margin-bottom: 18px; font-size: 16px; }
+	.k-display { font-size: 38px; font-weight: 700; letter-spacing: 4px; min-height: 64px; background: var(--k-panel); border: 1px solid var(--k-border);
+		border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; font-variant-numeric: tabular-nums; }
+	.k-display.placeholder { color: var(--k-muted); font-size: 22px; letter-spacing: 0; font-weight: 500; }
+	.k-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+	.k-key { background: var(--k-key); color: var(--k-text); border: 1px solid var(--k-border); border-radius: 16px; font-size: 30px; font-weight: 600;
+		height: 72px; cursor: pointer; touch-action: manipulation; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+	.k-key:active { background: var(--k-key-press); transform: scale(0.97); }
+	.k-key.k-go { background: linear-gradient(135deg, var(--k-accent-deep), var(--k-accent)); border: 0; font-size: 20px;
+		box-shadow: 0 12px 26px -12px rgba(60, 109, 245, .9); }
+	.k-key.k-go:disabled { opacity: 0.4; }
+	.k-key.k-muted { font-size: 18px; color: var(--k-muted); }
+	.k-actions { margin-top: 18px; display: flex; gap: 12px; }
+	.k-btn { flex: 1; background: transparent; border: 2px solid var(--k-key); color: var(--k-text); border-radius: 14px;
+		padding: 14px; font-size: 17px; font-weight: 600; cursor: pointer; }
+	.k-hidden { display: none !important; }
+	#k-reader { width: 100%; border-radius: 14px; overflow: hidden; background: #000; min-height: 300px; }
+	.k-result { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+		padding: 24px; text-align: center; z-index: 10; }
+	.k-result.success { background: var(--k-success); }
+	.k-result.warning { background: var(--k-warning); }
+	.k-result.error { background: var(--k-error); }
+	.k-result.info { background: var(--k-info); }
+	.k-avatar { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 6px solid rgba(255,255,255,.85);
+		background: rgba(255,255,255,.2); display: flex; align-items: center; justify-content: center; font-size: 60px; font-weight: 700; margin-bottom: 18px; }
+	.k-badge { font-size: 20px; font-weight: 800; letter-spacing: 3px; background: rgba(0,0,0,.25); padding: 6px 20px; border-radius: 999px; margin-bottom: 12px; }
+	.k-name { font-size: 40px; font-weight: 800; }
+	.k-seat { font-size: 24px; margin-top: 6px; opacity: .95; }
+	.k-msg { font-size: 26px; margin-top: 18px; max-width: 720px; font-weight: 600; }
+	.k-time { margin-top: 10px; opacity: .85; font-size: 18px; }
+	.k-bar { position: absolute; bottom: 0; left: 0; height: 6px; background: rgba(255,255,255,.7); }
+	@media (max-height: 700px) { .k-key { height: 56px; font-size: 24px; } .k-display { min-height: 52px; font-size: 30px; } }
+</style>
+{%- endblock %}
+
+{% block content %}
+<div class="k-bg" aria-hidden="true"><span class="b1"></span><span class="b2"></span><span class="b3"></span></div>
+<div class="kiosk" data-branch="{{ branch }}" data-reset="{{ reset_seconds }}">
+	<div class="k-header k-glass">
+		<div class="k-brand">
+			<img src="/assets/pathshala/images/pathshala-icon-transparent.png" alt="">
+			<div>PATHSHALA<small>{{ branch }} · Library and Self Study Centre</small></div>
+		</div>
+		<div class="k-clock" id="k-clock">--:--</div>
+	</div>
+	<div class="k-zones" id="k-zones"></div>
+
+	<div class="k-main">
+		<div class="k-card">
+			<!-- keypad: mobile then PIN -->
+			<div id="k-step-pad">
+				<div class="k-title" id="k-title">Check In / Check Out</div>
+				<div class="k-sub" id="k-sub">Enter your registered mobile number</div>
+				<div class="k-display placeholder" id="k-display">Mobile number</div>
+				<div class="k-pad" id="k-pad">
+					<button class="k-key" data-k="1">1</button><button class="k-key" data-k="2">2</button><button class="k-key" data-k="3">3</button>
+					<button class="k-key" data-k="4">4</button><button class="k-key" data-k="5">5</button><button class="k-key" data-k="6">6</button>
+					<button class="k-key" data-k="7">7</button><button class="k-key" data-k="8">8</button><button class="k-key" data-k="9">9</button>
+					<button class="k-key k-muted" data-k="back">⌫</button><button class="k-key" data-k="0">0</button><button class="k-key k-go" data-k="go" id="k-go" disabled>Next</button>
+				</div>
+				<div class="k-actions">
+					<button class="k-btn k-hidden" id="k-cancel">Start over</button>
+					<button class="k-btn" id="k-scan-btn">📷 Scan QR instead</button>
+				</div>
+			</div>
+
+			<!-- QR scan -->
+			<div id="k-step-scan" class="k-hidden">
+				<div class="k-title">Show your QR code</div>
+				<div class="k-sub">Hold it in front of the camera</div>
+				<div id="k-reader"></div>
+				<div class="k-actions"><button class="k-btn" id="k-scan-cancel">⌨ Use mobile &amp; PIN</button></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="k-result k-hidden" id="k-result">
+		<div class="k-avatar" id="k-avatar"></div>
+		<div class="k-badge" id="k-badge"></div>
+		<div class="k-name" id="k-name"></div>
+		<div class="k-seat" id="k-seat"></div>
+		<div class="k-msg" id="k-msg"></div>
+		<div class="k-time" id="k-time"></div>
+		<div class="k-bar" id="k-bar"></div>
+	</div>
+</div>
+{% endblock %}
+
+{%- block script %}
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" defer></script>
+{{ super() }}
+{%- endblock %}

@@ -1,0 +1,96 @@
+/* Glass styling for the Pathshala workspace only (Frappe sets body[data-route] on every page change). */
+body[data-route="Workspaces/Pathshala"] {
+	--psl-blue: #3c6df5;
+	--psl-deep: #1e3cf4;
+	--psl-teal: #6ccab7;
+	--psl-glass: rgba(255, 255, 255, 0.62);
+	--psl-glass-border: rgba(255, 255, 255, 0.85);
+	--psl-shadow: 0 16px 36px -22px rgba(30, 60, 244, 0.45);
+	background:
+		radial-gradient(900px 600px at 0% 0%, rgba(60, 109, 245, 0.14), transparent 60%),
+		radial-gradient(800px 600px at 100% 100%, rgba(108, 202, 183, 0.18), transparent 60%),
+		radial-gradient(500px 400px at 100% 10%, rgba(173, 252, 84, 0.12), transparent 60%),
+		#f3f6fd fixed;
+}
+body[data-route="Workspaces/Pathshala"] .page-container,
+body[data-route="Workspaces/Pathshala"] .page-body,
+body[data-route="Workspaces/Pathshala"] .layout-main-section,
+body[data-route="Workspaces/Pathshala"] .layout-main-section-wrapper,
+body[data-route="Workspaces/Pathshala"] .page-head {
+	background: transparent !important;
+}
+body[data-route="Workspaces/Pathshala"] .page-head {
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+	background: rgba(243, 246, 253, 0.7) !important;
+}
+
+/* overview block sits flush */
+body[data-route="Workspaces/Pathshala"] .custom-block-widget-box {
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+}
+
+/* glass widgets */
+body[data-route="Workspaces/Pathshala"] .widget.shortcut-widget-box,
+body[data-route="Workspaces/Pathshala"] .widget.links-widget-box,
+body[data-route="Workspaces/Pathshala"] .widget.number-widget-box,
+body[data-route="Workspaces/Pathshala"] .widget.quick-list-widget-box {
+	background: var(--psl-glass) !important;
+	border: 1px solid var(--psl-glass-border) !important;
+	border-radius: 16px !important;
+	backdrop-filter: blur(16px) saturate(160%);
+	-webkit-backdrop-filter: blur(16px) saturate(160%);
+	box-shadow: var(--psl-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+body[data-route="Workspaces/Pathshala"] .widget.shortcut-widget-box:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 22px 40px -22px rgba(30, 60, 244, 0.6), inset 0 1px 0 #fff !important;
+}
+body[data-route="Workspaces/Pathshala"] .widget.shortcut-widget-box .widget-title {
+	font-weight: 600;
+	color: #0f1b4c;
+}
+body[data-route="Workspaces/Pathshala"] .widget.links-widget-box .widget-title {
+	font-weight: 600;
+	color: var(--psl-deep);
+}
+body[data-route="Workspaces/Pathshala"] .widget.links-widget-box .link-item {
+	border-radius: 8px;
+	transition: background 0.15s, padding-left 0.15s;
+}
+body[data-route="Workspaces/Pathshala"] .widget.links-widget-box .link-item:hover {
+	background: rgba(60, 109, 245, 0.08);
+	padding-left: 6px;
+}
+body[data-route="Workspaces/Pathshala"] .ce-header,
+body[data-route="Workspaces/Pathshala"] .h4 {
+	color: #0f1b4c;
+	letter-spacing: -0.2px;
+}
+
+/* dark theme */
+[data-theme="dark"] body[data-route="Workspaces/Pathshala"],
+body[data-route="Workspaces/Pathshala"][data-theme="dark"] {
+	--psl-glass: rgba(24, 32, 72, 0.55);
+	--psl-glass-border: rgba(255, 255, 255, 0.1);
+	--psl-shadow: 0 16px 36px -22px rgba(0, 0, 0, 0.7);
+	background:
+		radial-gradient(900px 600px at 0% 0%, rgba(60, 109, 245, 0.18), transparent 60%),
+		radial-gradient(800px 600px at 100% 100%, rgba(108, 202, 183, 0.14), transparent 60%),
+		#0d1230 fixed;
+}
+[data-theme="dark"] body[data-route="Workspaces/Pathshala"] .page-head {
+	background: rgba(13, 18, 48, 0.7) !important;
+}
+[data-theme="dark"] body[data-route="Workspaces/Pathshala"] .widget .widget-title,
+[data-theme="dark"] body[data-route="Workspaces/Pathshala"] .ce-header,
+[data-theme="dark"] body[data-route="Workspaces/Pathshala"] .h4 {
+	color: #eef2ff;
+}
+[data-theme="dark"] body[data-route="Workspaces/Pathshala"] .widget.links-widget-box .widget-title {
+	color: #8fb0ff;
+}
