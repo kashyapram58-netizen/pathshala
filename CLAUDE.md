@@ -11,7 +11,8 @@ Frappe v15 app for **Pathshala – Library and Self Study Centre**. The business
 - **`pathshala.com` is NOT the default site** (the default is `emergency.localhost`). Always pass `--site pathshala.com`. A server started without it serves the wrong site.
 - `developer_mode` is on for `pathshala.com`, so DocType edits in the UI are written to JSON files in the app.
 - After changing DocType JSON: `bench --site pathshala.com migrate`. After changing hooks, www pages or Python: `bench --site pathshala.com clear-cache` (restart the server if running).
-- Ad-hoc scripts: from `sites/`, run `../env/bin/python script.py` with `frappe.init(site="pathshala.com", sites_path="."); frappe.connect()`. Wrap test data in `try/finally: frappe.db.rollback()`.
+- Ad-hoc scripts: from `sites/`, run `../env/bin/python script.py` with `frappe.init(site="pathshala.com", sites_path="."); frappe.connect()`. Wrap test data in `try/finally: frappe.db.rollback()`, **but don't trust the rollback**: one seed run (with print/PDF rendering) was committed anyway. Use clearly fake names and check table counts afterwards; clean up by `creation` time window.
+- PDF rendering from a script needs `frappe.local.conf.host_name` pointed at a running server. Otherwise wkhtmltopdf fails with `HostNotFoundError`, because `pathshala.com` is a real public domain.
 - Headless screenshots: `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --user-data-dir=<tmp> --screenshot=...`. Its minimum layout width is about 500px, so to test phone widths, put the page in a 390px `<iframe>`. The host shell is zsh, so don't rely on `set -- $var` word-splitting.
 - No committed test suite yet; behaviour was verified with rollback scripts. Ruff isn't installed in the container.
 
@@ -19,17 +20,23 @@ Frappe v15 app for **Pathshala – Library and Self Study Centre**. The business
 
 ```
 pathshala/
-  hooks.py          scheduler, after_migrate, jinja, branding (app_logo_url, favicon, apps screen)
-  setup.py          after_migrate: creates roles Pathshala Manager / Staff / Kiosk
+  hooks.py          scheduler, after_migrate, jinja, app_include_css, branding (app_logo_url, favicon, apps screen)
+  setup.py          after_migrate: roles, syncs Custom HTML Blocks from workspace_blocks/, sets
+                    System Settings.default_app = pathshala (only if empty) so login lands on /app/pathshala
+  id_card.py        get_id_card_data() for the "Pathshala ID Card" print format (embeds logo/photo/QR as data URIs)
+  workspace_blocks/ source of the "Pathshala Overview" Custom HTML Block (html/css/js, shadow DOM, `root_element`)
   utils.py          shared helpers: mobile normalising, time maths, fee status,
                     set_payment_totals, new_fee_payment, validate_gender_policy
   attendance.py     punch() check-in/out rules, auto_check_out (hourly)
   api.py            whitelisted kiosk_punch / kiosk_status / staff_punch, PIN lockout
   www/kiosk.*       full-screen tablet check-in page (keypad + optional QR via html5-qrcode)
   www/login.*       glass re-skin of Frappe login (extends frappe/www/login.html)
-  public/css/login.css, public/images/pathshala-*.png   brand assets
+  public/css/login.css   login styles;  public/css/desk.css   glass styles scoped to body[data-route="Workspaces/Pathshala"]
+  public/images/pathshala-*.png   brand assets
   pathshala/doctype/…   all DocTypes (module "Pathshala")
-  pathshala/workspace/pathshala/   desk workspace
+  pathshala/page/seat_map/   "Seat & Locker Map" desk page (/app/seat-map)
+  pathshala/print_format/pathshala_id_card/   CR80 front/back student card (Student default print format)
+  pathshala/workspace/pathshala/   desk workspace (overview block + shortcuts + link cards)
 ```
 
 ## DocTypes
@@ -64,6 +71,9 @@ pathshala/
 
 ## Frontend conventions
 
+- **Workspace overview** (`workspace_blocks/pathshala_overview.*`): edit those files, then migrate. Don't edit the Custom HTML Block in the UI, because migrate overwrites it. Data comes from `pathshala.api.dashboard_stats`.
+- **Seat map** states at the chosen date and time: free / partial (booked other hours, so sell hourly) / occupied / maintenance, with flags for checked-in, expiring soon and fee due. Seats and lockers sort naturally (C2 before C10).
+- **ID card** is laid out with tables, because wkhtmltopdf is old WebKit. Keep that, and include `-webkit-` gradient fallbacks.
 - Brand colours: blue `#3C6DF5`, deep blue `#1E3CF4`, teal `#6CCAB7`, lime `#ADFC54`. Font Poppins. The look is "glass": `backdrop-filter: blur()` over blurred colour shapes.
 - `www/login.html` **extends** `frappe/www/login.html` and only overrides `navbar`, `footer`, `head_include` and `content` (calling `self.page_content()`). Don't copy Frappe's form markup, because `login.js` depends on its IDs. All CSS is scoped under `body.psl-login`.
 - Files under `/assets` are browser-cached for 12h, so cache-bust with `?v=<mtime>` (see `www/login.py`).
@@ -75,4 +85,4 @@ Tabs, 110-char lines (ruff config in `pyproject.toml`). Controllers use `frappe.
 
 ## Ideas not yet built
 
-Visual seat/locker map, printable student ID card with QR, UPI QR on the "fee due" kiosk screen, WhatsApp alerts (the `frappe_whatsapp` app is in the bench but not installed on this site), reports (occupancy, dues, attendance).
+UPI QR on the "fee due" kiosk screen, WhatsApp alerts (the `frappe_whatsapp` app is in the bench but not installed on this site), reports (occupancy, dues, attendance).

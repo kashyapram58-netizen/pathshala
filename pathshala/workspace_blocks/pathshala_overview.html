@@ -1,0 +1,56 @@
+<div class="ov">
+	<span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+
+	<div class="hero glass">
+		<div class="hero-text">
+			<div class="hello" data-el="hello">Welcome</div>
+			<div class="sub" data-el="today"></div>
+		</div>
+		<div class="hero-actions">
+			<button class="btn-ghost" data-action="kiosk">Open Kiosk ↗</button>
+			<button class="btn-primary" data-action="map">Seat &amp; Locker Map</button>
+		</div>
+		<img class="hero-logo" src="/assets/pathshala/images/pathshala-logo-transparent.png" alt="Pathshala">
+	</div>
+
+	<div class="kpis">
+		<div class="kpi glass" data-go="attendance">
+			<div class="kpi-icon blue">●</div>
+			<div class="kpi-value" data-el="present_now">–</div>
+			<div class="kpi-label">Studying now</div>
+			<div class="kpi-foot" data-el="checkins_today"></div>
+		</div>
+		<div class="kpi glass" data-go="map">
+			<div class="kpi-icon teal">▦</div>
+			<div class="kpi-value"><span data-el="occupancy">–</span><small>%</small></div>
+			<div class="kpi-label">Seat occupancy</div>
+			<div class="meter"><span data-el="occupancy_bar"></span></div>
+		</div>
+		<div class="kpi glass" data-go="expiring">
+			<div class="kpi-icon amber">⏳</div>
+			<div class="kpi-value" data-el="expiring_week">–</div>
+			<div class="kpi-label">Plans expiring in 7 days</div>
+			<div class="kpi-foot" data-el="active_students"></div>
+		</div>
+		<div class="kpi glass" data-go="dues">
+			<div class="kpi-icon red">₹</div>
+			<div class="kpi-value" data-el="fees_due">–</div>
+			<div class="kpi-label">Fees outstanding</div>
+			<div class="kpi-foot" data-el="collection_today"></div>
+		</div>
+		<div class="kpi glass" data-go="lockers">
+			<div class="kpi-icon lime">🔒</div>
+			<div class="kpi-value"><span data-el="lockers_free">–</span><small data-el="lockers_total"></small></div>
+			<div class="kpi-label">Lockers free</div>
+			<div class="kpi-foot" data-el="lockers_overdue"></div>
+		</div>
+	</div>
+
+	<div class="quick">
+		<button class="chip glass" data-action="new_student"><b>＋</b> New Student</button>
+		<button class="chip glass" data-action="new_booking"><b>＋</b> Seat Booking</button>
+		<button class="chip glass" data-action="new_locker"><b>＋</b> Rent Locker</button>
+		<button class="chip glass" data-action="new_payment"><b>₹</b> Receive Payment</button>
+		<button class="chip glass" data-action="attendance"><b>✓</b> Attendance</button>
+	</div>
+</div>

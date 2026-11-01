@@ -41,7 +41,7 @@ add_to_apps_screen = [
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/pathshala/css/pathshala.css"
+app_include_css = "/assets/pathshala/css/desk.css"
 # app_include_js = "/assets/pathshala/js/pathshala.js"
 
 # include js, css files in header of web template
@@ -174,7 +174,12 @@ scheduler_events = {
 
 after_migrate = "pathshala.setup.after_migrate"
 
-jinja = {"methods": ["pathshala.pathshala.doctype.student.student.qr_data_uri"]}
+jinja = {
+	"methods": [
+		"pathshala.pathshala.doctype.student.student.qr_data_uri",
+		"pathshala.id_card.get_id_card_data",
+	]
+}
 
 # scheduler_events = {
 # 	"all": [

@@ -1,8 +1,13 @@
 {
  "charts": [],
- "content": "[{\"id\": \"hdr1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Quick Access</b></span>\", \"col\": 12}}, {\"id\": \"sc0\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Student\", \"col\": 3}}, {\"id\": \"sc1\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Seat Booking\", \"col\": 3}}, {\"id\": \"sc2\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Locker Allocation\", \"col\": 3}}, {\"id\": \"sc3\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Fee Payment\", \"col\": 3}}, {\"id\": \"sc4\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Attendance Log\", \"col\": 3}}, {\"id\": \"kiosk\", \"type\": \"paragraph\", \"data\": {\"text\": \"Open the check-in kiosk: <a href=\\\"/kiosk\\\" target=\\\"_blank\\\"><b>/kiosk</b></a>\", \"col\": 12}}, {\"id\": \"hdr2\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Masters &amp; Settings</b></span>\", \"col\": 12}}, {\"id\": \"cd0\", \"type\": \"card\", \"data\": {\"card_name\": \"Front Desk\", \"col\": 3}}, {\"id\": \"cd1\", \"type\": \"card\", \"data\": {\"card_name\": \"Lockers\", \"col\": 3}}, {\"id\": \"cd2\", \"type\": \"card\", \"data\": {\"card_name\": \"Setup\", \"col\": 3}}, {\"id\": \"cd3\", \"type\": \"card\", \"data\": {\"card_name\": \"Kiosk\", \"col\": 3}}]",
+ "content": "[{\"id\": \"ovw\", \"type\": \"custom_block\", \"data\": {\"custom_block_name\": \"Pathshala Overview\", \"col\": 12}}, {\"id\": \"hdr1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Shortcuts</b></span>\", \"col\": 12}}, {\"id\": \"sc0\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Seat & Locker Map\", \"col\": 4}}, {\"id\": \"sc1\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Student\", \"col\": 4}}, {\"id\": \"sc2\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Seat Booking\", \"col\": 4}}, {\"id\": \"sc3\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Locker Allocation\", \"col\": 4}}, {\"id\": \"sc4\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Fee Payment\", \"col\": 4}}, {\"id\": \"sc5\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Attendance Log\", \"col\": 4}}, {\"id\": \"hdr2\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Manage</b></span>\", \"col\": 12}}, {\"id\": \"cd0\", \"type\": \"card\", \"data\": {\"card_name\": \"Front Desk\", \"col\": 3}}, {\"id\": \"cd1\", \"type\": \"card\", \"data\": {\"card_name\": \"Lockers\", \"col\": 3}}, {\"id\": \"cd2\", \"type\": \"card\", \"data\": {\"card_name\": \"Setup\", \"col\": 3}}, {\"id\": \"cd3\", \"type\": \"card\", \"data\": {\"card_name\": \"Kiosk\", \"col\": 3}}]",
  "creation": "2026-11-01 10:00:00.000000",
- "custom_blocks": [],
+ "custom_blocks": [
+  {
+   "custom_block_name": "Pathshala Overview",
+   "label": "Pathshala Overview"
+  }
+ ],
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
@@ -199,7 +204,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-11-01 11:00:00.000000",
+ "modified": "2026-11-01 12:45:00.000000",
  "modified_by": "Administrator",
  "module": "Pathshala",
  "name": "Pathshala",
@@ -212,6 +217,13 @@
  "roles": [],
  "sequence_id": 1.0,
  "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "",
+   "label": "Seat & Locker Map",
+   "link_to": "seat-map",
+   "type": "Page"
+  },
   {
    "color": "Blue",
    "doc_view": "List",

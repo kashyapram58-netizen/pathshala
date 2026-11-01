@@ -25,6 +25,17 @@ frappe.ui.form.on("Student", {
 				})
 		);
 
+		frm.add_custom_button(__("Print ID Card"), () => {
+			const params = new URLSearchParams({
+				doctype: frm.doc.doctype,
+				name: frm.doc.name,
+				format: "Pathshala ID Card",
+				no_letterhead: 1,
+				trigger_print: 1,
+			});
+			window.open(`/printview?${params}`, "_blank");
+		});
+
 		frm.add_custom_button(
 			__("Reset Kiosk PIN"),
 			() =>

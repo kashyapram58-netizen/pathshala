@@ -1,0 +1,26 @@
+{
+ "creation": "2026-11-01 12:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Page",
+ "icon": "fa fa-th",
+ "idx": 0,
+ "modified": "2026-11-01 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pathshala",
+ "name": "seat-map",
+ "owner": "Administrator",
+ "page_name": "seat-map",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Pathshala Manager"
+  },
+  {
+   "role": "Pathshala Staff"
+  }
+ ],
+ "standard": "Yes",
+ "title": "Seat & Locker Map"
+}

@@ -68,6 +68,54 @@ def staff_punch(student: str, branch: str | None = None):
 	return punch(student, branch, source="Staff")
 
 
+@frappe.whitelist()
+def dashboard_stats() -> dict:
+	"""Live numbers for the Pathshala workspace overview."""
+	if not STAFF_ROLES & set(frappe.get_roles()):
+		raise frappe.PermissionError
+	now = frappe.utils.now_datetime()
+	date, time = now.date(), now.time().strftime("%H:%M:%S")
+
+	def scalar(query, *args):
+		return frappe.db.sql(query, args)[0][0] or 0
+
+	seats_total = frappe.db.count("Seat", {"is_active": 1})
+	seats_booked_now = scalar(
+		"""select count(distinct seat) from `tabSeat Booking`
+		where docstatus = 1 and status = 'Active' and from_date <= %s and to_date >= %s
+			and from_time <= %s and to_time > %s""",
+		date, date, time, time,
+	)
+	fees_due = sum(
+		scalar(
+			f"""select sum(outstanding_amount) from `tab{dt}`
+			where docstatus = 1 and status != 'Cancelled' and outstanding_amount > 0"""
+		)
+		for dt in ("Seat Booking", "Locker Allocation")
+	)
+	return {
+		"present_now": frappe.db.count("Attendance Log", {"attendance_date": date, "check_out": ("is", "not set")}),
+		"checkins_today": frappe.db.count("Attendance Log", {"attendance_date": date}),
+		"seats_total": seats_total,
+		"seats_booked_now": seats_booked_now,
+		"occupancy": round(seats_booked_now * 100 / seats_total) if seats_total else 0,
+		"active_students": scalar(
+			"select count(distinct student) from `tabSeat Booking` where docstatus = 1 and status = 'Active'"
+		),
+		"expiring_week": frappe.db.count(
+			"Seat Booking",
+			{"docstatus": 1, "status": "Active", "to_date": ("between", (date, frappe.utils.add_days(date, 7)))},
+		),
+		"fees_due": fees_due,
+		"collection_today": scalar(
+			"select sum(amount) from `tabFee Payment` where docstatus = 1 and posting_date = %s", date
+		),
+		"lockers_total": frappe.db.count("Locker"),
+		"lockers_free": frappe.db.count("Locker", {"status": "Available"}),
+		"lockers_overdue": frappe.db.count("Locker", {"status": "Overdue"}),
+	}
+
+
 def student_from_qr(qr: str) -> str | None:
 	token = (qr or "").strip()
 	if token.startswith(QR_PREFIX):
