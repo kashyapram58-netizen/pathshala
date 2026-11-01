@@ -1,15 +1,8 @@
-import re
-
 import frappe
 from frappe.utils import cint, date_diff, flt, getdate, nowdate, nowtime
 
 from pathshala.api import STAFF_ROLES
-from pathshala.utils import fmt_time, to_time
-
-
-def natural_key(value: str):
-	"""Sort C2 before C10."""
-	return [int(part) if part.isdigit() else part for part in re.split(r"(\d+)", value or "")]
+from pathshala.utils import fmt_time, natural_key, to_time
 
 
 def check_access():
@@ -46,18 +39,20 @@ def get_seat_map(branch: str, date: str | None = None, time: str | None = None) 
 		],
 		order_by="from_time asc",
 	)
-	present = set()
+	# Who is sitting where right now (Flexi students get their seat at check-in).
+	present = {}
 	if date == getdate(nowdate()):
-		present = set(
-			frappe.get_all(
-				"Attendance Log",
-				filters={"branch": branch, "attendance_date": date, "check_out": ("is", "not set")},
-				pluck="seat",
-			)
-		)
+		for log in frappe.get_all(
+			"Attendance Log",
+			filters={"branch": branch, "check_out": ("is", "not set"), "seat": ("is", "set")},
+			fields=["seat", "student", "student_name", "booking", "check_in"],
+		):
+			present[log.seat] = log
 
 	by_seat = {}
 	for b in bookings:
+		if not b.seat:
+			continue
 		by_seat.setdefault(b.seat, []).append(
 			{
 				"name": b.name,
@@ -85,6 +80,20 @@ def get_seat_map(branch: str, date: str | None = None, time: str | None = None) 
 	for seat in seats:
 		seat_bookings = by_seat.get(seat.name, [])
 		current = next((b for b in seat_bookings if b["active_now"]), None)
+		walk_in = present.get(seat.name)
+		if not current and walk_in:
+			current = {
+				"name": walk_in.booking,
+				"student": walk_in.student,
+				"student_name": walk_in.student_name,
+				"booking_type": "Flexi",
+				"slot": f"in since {fmt_time(walk_in.check_in)}",
+				"active_now": True,
+				"expiring": False,
+				"to_date": None,
+				"fee_due": False,
+				"flexi": True,
+			}
 		if not seat.is_active:
 			state = "maintenance"
 		elif current:
@@ -103,7 +112,7 @@ def get_seat_map(branch: str, date: str | None = None, time: str | None = None) 
 					"state": state,
 					"present": seat.name in present,
 					"current": current,
-					"bookings": seat_bookings,
+					"bookings": seat_bookings + ([current] if current and current.get("flexi") else []),
 					"expiring": bool(current and current["expiring"]),
 					"fee_due": any(b["fee_due"] for b in seat_bookings),
 				}

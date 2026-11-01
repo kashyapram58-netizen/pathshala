@@ -147,16 +147,84 @@ frappe.ready(() => {
 
 		const box = $("k-result");
 		box.className = `k-result ${res.status || "error"}`;
-		const seconds = res.status === "error" ? resetSeconds + 3 : resetSeconds;
+		// Flexi students got an auto-assigned seat; let them pick another one.
+		lastResult = res;
+		const canChange = !!res.seat_token && res.status !== "error";
+		$("k-change").classList.toggle("k-hidden", !canChange);
+
+		let seconds = res.status === "error" ? resetSeconds + 3 : resetSeconds;
+		if (canChange) seconds += 6;
 		animateBar(seconds);
 		resetTimer = setTimeout(hideResult, seconds * 1000);
 		if (res.status !== "error") loadStatus();
 	}
 
 	function hideResult() {
+		clearTimeout(resetTimer);
 		$("k-result").classList.add("k-hidden");
+		$("k-picker").classList.add("k-hidden");
 	}
 	$("k-result").addEventListener("click", hideResult);
+
+	// ------------------------------------------------------------ seat picker (Flexi)
+	let lastResult = null;
+
+	$("k-change").addEventListener("click", (e) => {
+		e.stopPropagation();
+		openPicker();
+	});
+	$("k-picker-close").addEventListener("click", hideResult);
+
+	function openPicker() {
+		clearTimeout(resetTimer);
+		const token = lastResult && lastResult.seat_token;
+		$("k-picker").classList.remove("k-hidden");
+		$("k-picker-body").innerHTML = `<div class="k-sub">Loading seats…</div>`;
+		frappe
+			.call({ method: "pathshala.api.kiosk_free_seats", args: { seat_token: token, branch } })
+			.then((r) => renderPicker(r.message || [], token))
+			.catch(hideResult);
+	}
+
+	function renderPicker(seats, token) {
+		const esc = frappe.utils.escape_html;
+		const zones = {};
+		seats.forEach((s) => (zones[s.zone_name] = zones[s.zone_name] || []).push(s));
+		$("k-picker-sub").textContent = seats.length > 1 ? `${seats.length - 1} other seats free` : "No other seat is free right now";
+		$("k-picker-body").innerHTML = Object.keys(zones)
+			.map(
+				(z) => `<div class="k-picker-zone"><h4>${esc(z)}</h4><div class="k-seats">${zones[z]
+					.map(
+						(s) => `<button class="k-seat ${s.current ? "current" : ""}" data-seat="${esc(s.name)}">
+							${esc(s.seat_no)}<small>${s.current ? "your seat" : s.seat_type !== "Normal" ? esc(s.seat_type) : ""}</small>
+						</button>`
+					)
+					.join("")}</div></div>`
+			)
+			.join("");
+		$("k-picker-body").querySelectorAll(".k-seat").forEach((btn) =>
+			btn.addEventListener("click", () => {
+				if (btn.classList.contains("current")) return hideResult();
+				frappe
+					.call({
+						method: "pathshala.api.kiosk_change_seat",
+						type: "POST",
+						args: { seat_token: token, seat: btn.dataset.seat, branch },
+					})
+					.then((r) => {
+						$("k-picker").classList.add("k-hidden");
+						showResult(
+							Object.assign({}, lastResult, r.message, {
+								status: "success",
+								seat_token: null,
+								message: `Seat changed to ${r.message.seat}. Happy studying!`,
+							})
+						);
+					})
+					.catch(() => openPicker());
+			})
+		);
+	}
 
 	function animateBar(seconds) {
 		const bar = $("k-bar");

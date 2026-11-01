@@ -33,6 +33,19 @@ frappe.ui.form.on("Seat Booking", {
 		frm.set_value("zone", null);
 	},
 
+	plan(frm) {
+		if (!frm.doc.plan) return;
+		frappe.db
+			.get_value("Seat Plan", frm.doc.plan, ["booking_type", "shift_type", "fixed_seat", "hours_per_day"])
+			.then(({ message: p }) => {
+				// Daily Hours without a reserved seat = Flexi: a free seat is given at each check-in.
+				const flexi = p.booking_type === "Shift" && p.shift_type === "Daily Hours" && !p.fixed_seat;
+				frm.set_value("seat_mode", flexi ? "Flexi" : "Fixed");
+				frm.set_value("hours_per_day", p.shift_type === "Daily Hours" ? p.hours_per_day : 0);
+				if (flexi) frm.set_value("seat", null);
+			});
+	},
+
 	zone(frm) {
 		frm.set_value("seat", null);
 	},

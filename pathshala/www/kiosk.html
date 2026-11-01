@@ -77,6 +77,22 @@
 	.k-msg { font-size: 26px; margin-top: 18px; max-width: 720px; font-weight: 600; }
 	.k-time { margin-top: 10px; opacity: .85; font-size: 18px; }
 	.k-bar { position: absolute; bottom: 0; left: 0; height: 6px; background: rgba(255,255,255,.7); }
+	.k-change { margin-top: 22px; background: rgba(255,255,255,.18); color: #fff; border: 2px solid rgba(255,255,255,.7);
+		border-radius: 16px; padding: 14px 26px; font-size: 20px; font-weight: 600; cursor: pointer; }
+	.k-change:active { background: rgba(255,255,255,.3); }
+	.k-picker { position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column; padding: 24px 28px;
+		background: rgba(11, 16, 48, .92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+	.k-picker-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; text-align: left; }
+	.k-picker-close { flex: 0 0 auto; }
+	.k-picker-body { flex: 1; overflow-y: auto; }
+	.k-picker-zone { margin-bottom: 18px; }
+	.k-picker-zone h4 { color: var(--k-muted); font-size: 15px; font-weight: 600; margin: 0 0 10px; text-transform: uppercase; letter-spacing: 1px; }
+	.k-seats { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 12px; }
+	.k-seat { height: 76px; border-radius: 16px; border: 2px solid rgba(18, 162, 107, .9); background: rgba(18, 162, 107, .18);
+		color: #fff; font-size: 22px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+	.k-seat small { font-size: 11px; font-weight: 500; opacity: .8; }
+	.k-seat.current { border-color: var(--k-accent); background: rgba(60, 109, 245, .35); }
+	.k-seat:active { transform: scale(.96); }
 	@media (max-height: 700px) { .k-key { height: 56px; font-size: 24px; } .k-display { min-height: 52px; font-size: 30px; } }
 </style>
 {%- endblock %}
@@ -129,7 +145,19 @@
 		<div class="k-seat" id="k-seat"></div>
 		<div class="k-msg" id="k-msg"></div>
 		<div class="k-time" id="k-time"></div>
+		<button class="k-change k-hidden" id="k-change">🪑 Choose another seat</button>
 		<div class="k-bar" id="k-bar"></div>
+	</div>
+
+	<div class="k-picker k-hidden" id="k-picker">
+		<div class="k-picker-head">
+			<div>
+				<div class="k-title">Choose your seat</div>
+				<div class="k-sub" id="k-picker-sub">Tap a free seat</div>
+			</div>
+			<button class="k-btn k-picker-close" id="k-picker-close">Keep current seat</button>
+		</div>
+		<div class="k-picker-body" id="k-picker-body"></div>
 	</div>
 </div>
 {% endblock %}

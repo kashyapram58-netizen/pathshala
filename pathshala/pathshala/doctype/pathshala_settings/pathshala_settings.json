@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 0,
- "creation": "2026-11-01 12:00:00.000000",
+ "creation": "2026-11-01 14:00:00.000000",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -12,7 +12,11 @@
   "column_break_1",
   "expiry_warning_days",
   "duplicate_punch_seconds",
-  "kiosk_reset_seconds"
+  "kiosk_reset_seconds",
+  "section_flexi",
+  "extra_hour_rate",
+  "column_break_2",
+  "overstay_grace_minutes"
  ],
  "fields": [
   {
@@ -60,12 +64,34 @@
    "fieldname": "kiosk_reset_seconds",
    "fieldtype": "Int",
    "label": "Kiosk Result Screen (Seconds)"
+  },
+  {
+   "fieldname": "section_flexi",
+   "fieldtype": "Section Break",
+   "label": "Daily Hours Plans"
+  },
+  {
+   "description": "Used when the plan has no overstay rate.",
+   "fieldname": "extra_hour_rate",
+   "fieldtype": "Currency",
+   "label": "Default Overstay Rate per Hour"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "10",
+   "description": "Overstay within this many minutes per day is not charged.",
+   "fieldname": "overstay_grace_minutes",
+   "fieldtype": "Int",
+   "label": "Overstay Grace (Minutes)"
   }
  ],
  "index_web_pages_for_search": 0,
  "issingle": 1,
  "links": [],
- "modified": "2026-11-01 12:00:00.000000",
+ "modified": "2026-11-01 14:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pathshala",
  "name": "Pathshala Settings",

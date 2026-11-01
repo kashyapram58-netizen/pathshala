@@ -2,12 +2,14 @@
  "actions": [],
  "allow_rename": 0,
  "autoname": "field:shift_name",
- "creation": "2026-11-01 12:00:00.000000",
+ "creation": "2026-11-01 14:00:00.000000",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "shift_name",
+  "shift_type",
   "column_break_1",
+  "hours_per_day",
   "start_time",
   "end_time"
  ],
@@ -21,27 +23,48 @@
    "unique": 1
   },
   {
+   "default": "Daily Hours",
+   "description": "Daily Hours: a number of hours per day, used any time the branch is open (visits add up). Time Slot: a fixed window, e.g. 8 AM to 2 PM.",
+   "fieldname": "shift_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Shift Type",
+   "options": "Daily Hours\nTime Slot",
+   "reqd": 1
+  },
+  {
    "fieldname": "column_break_1",
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.shift_type=='Daily Hours'",
+   "fieldname": "hours_per_day",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Hours per Day",
+   "mandatory_depends_on": "eval:doc.shift_type=='Daily Hours'"
+  },
+  {
+   "depends_on": "eval:doc.shift_type=='Time Slot'",
    "fieldname": "start_time",
    "fieldtype": "Time",
    "in_list_view": 1,
    "label": "Start Time",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.shift_type=='Time Slot'"
   },
   {
+   "depends_on": "eval:doc.shift_type=='Time Slot'",
    "fieldname": "end_time",
    "fieldtype": "Time",
    "in_list_view": 1,
    "label": "End Time",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.shift_type=='Time Slot'"
   }
  ],
  "index_web_pages_for_search": 0,
  "links": [],
- "modified": "2026-11-01 12:00:00.000000",
+ "modified": "2026-11-01 14:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pathshala",
  "name": "Study Shift",

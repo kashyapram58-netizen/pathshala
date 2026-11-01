@@ -49,26 +49,28 @@ pathshala/
 | Pathshala Branch | opening/closing time. Named "Pathshala Branch" because ERPNext already has "Branch" |
 | Study Zone | `gender_policy`: Co-ed / **Girls Only**. Name = `"{zone_name} - {branch}"` |
 | Seat | name = `"{branch}-{SEAT_NO}"` (upper-cased in `autoname`, which runs *before* validate) |
-| Study Shift | start/end time, same day only |
-| Seat Plan | booking_type Shift / Full Day / Hourly. `rate` = total for the duration, or per hour for Hourly |
+| Study Shift | `shift_type` **Daily Hours** (`hours_per_day`, e.g. the 4/8/12 hr plans; no times) or **Time Slot** (start/end, same day only). Frappe fills an empty Time field with *now* on insert, so validation checks end > start rather than "missing" |
+| Seat Plan | booking_type Shift / Full Day / Hourly. `rate` = total for the duration, or per hour for Hourly. `shift_type`/`hours_per_day` copied from the shift. `fixed_seat` (Daily Hours only) = premium reserved seat; `extra_hour_rate` overrides the settings overstay rate |
 | Student | 10-digit unique `mobile`. `kiosk_pin` is a Password field (auto-generated 4 digits, shown once). `qr_token` → QR payload `PSL:<token>` |
-| Seat Booking (submittable) | dates/times/amount calculated from the plan. status Draft/Active/Expired/Cancelled |
+| Seat Booking (submittable) | dates/times/amount calculated from the plan. status Draft/Active/Expired/Cancelled. `seat_mode` **Flexi** (Daily Hours plan without fixed seat: no zone/seat, window = branch hours) or Fixed. `extra_charges` = sum of overstay on its Attendance Logs |
 | Locker | status maintained by `refresh_locker_status()`: Available/Occupied/Overdue/Maintenance |
 | Locker Plan | rent + refundable security deposit |
 | Locker Allocation (submittable) | status Active/Overdue/Renewed/Released/Cancelled. Release via `release_locker()` |
 | Fee Payment (submittable) | **generic**: `reference_doctype` (Seat Booking / Locker Allocation) + `reference_name` Dynamic Link |
-| Attendance Log | one row per visit. source Staff/Kiosk. `auto_checked_out` |
+| Attendance Log | one row per visit. source Staff/Kiosk. `auto_checked_out`. `seat_assignment` Booking/Auto/Student/Staff. Daily Hours: `allowance_minutes`, `used_before_minutes`, `extra_minutes`, `extra_amount` |
 | Kiosk Device | maps a tablet login user to a branch |
-| Pathshala Settings (single) | kiosk rules: block if fee due, enforce shift timing, early-entry minutes, expiry warning days, repeat-scan seconds |
+| Pathshala Settings (single) | kiosk rules: block if fee due, enforce shift timing, early-entry minutes, expiry warning days, repeat-scan seconds. Daily Hours: `extra_hour_rate`, `overstay_grace_minutes` |
 
 ## Business rules (keep these intact)
 
 - **Girls Only:** non-female students can never be given a seat or locker in a Girls Only zone (`utils.validate_gender_policy`, enforced on the server). A student's gender can't be changed away from Female while they hold an active Girls Only booking.
 - **Seat conflict:** a clash needs *both* overlapping dates *and* overlapping times on the same seat (submitted, Active bookings). Morning and evening students can share a seat, and an hourly booking can fill a gap. A student can't hold two overlapping bookings.
 - Bookings must fall within branch hours. Monthly plans run `to_date = from_date + N months − 1 day`. Hourly bookings are a single day.
-- **Fees:** `net = amount − discount` (lockers: `rent + deposit − discount`). Paid/outstanding/fee_status are recalculated from submitted Fee Payments (`set_payment_totals`). Overpayment is blocked, and non-cash payments need a Transaction Ref No.
+- **Fees:** `net = amount − discount + extra_charges` (lockers: `rent + deposit − discount`). Paid/outstanding/fee_status are recalculated from submitted Fee Payments (`set_payment_totals`). Overpayment is blocked, and non-cash payments need a Transaction Ref No.
 - **Lockers:** the deposit is charged once; renewals set `security_deposit = 0` and mark the source "Renewed". An **Overdue** allocation blocks the locker for any date until it is renewed or released. Release requires zero outstanding, and the refund is capped at the deposit held across the renewal chain (`get_deposit_held`).
 - **Kiosk punch** (`attendance.punch`): an open log means check-out (a repeat scan within `duplicate_punch_seconds` is ignored); otherwise check-in. Check-in needs an Active booking at this branch for today whose time window (minus early-entry grace) covers now. Fee due blocks entry. Plan ending soon or an overdue locker gives a warning. Results are `{status: success|warning|error|info, action: IN|OUT, message, student_name, photo, seat, zone}`.
+- **Flexi (Daily Hours) seating:** at check-in `attendance.free_seats()` picks a seat: not occupied by an open log, and not reserved by a fixed booking overlapping [now, now + max(hours left today, 60 min)]. Allowed zones: Female → Girls Only + Co-ed, others → Co-ed (and the plan's gender policy/seat type). Order: last seat used, booking zone, **Girls Only zones before Co-ed** (keeps Co-ed free for boys), zone name, natural seat no. No free seat → error. The kiosk gets a `seat_token` (cache, 180 s) for `kiosk_free_seats`/`kiosk_change_seat`; staff use `attendance.change_seat`.
+- **Daily hours & overstay:** visits on one day add up per booking. Billable = `max(0, used − allowance − grace)`; each log is charged the increase it causes, at the plan rate or the settings rate. `update_extra_charges()` rolls it into the booking's net/outstanding, so the normal fee-due block applies to overstay too.
 - **Kiosk security:** `get_kiosk_branch()` ties a kiosk user to its Kiosk Device branch, while staff can pass `?branch=`. 5 wrong PINs locks that student out for 10 min. Read expiring cache keys with `frappe.cache.get_value(key, expires=True)`, otherwise the per-request local cache returns a stale value. Errors are deliberately generic ("Invalid mobile number or PIN").
 - **Schedulers:** daily `expire_bookings`, daily `mark_overdue` (lockers), hourly `auto_check_out` (closes open logs at branch closing time).
 

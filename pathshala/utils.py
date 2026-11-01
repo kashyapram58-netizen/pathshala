@@ -6,6 +6,11 @@ from frappe import _
 from frappe.utils import flt, get_time
 
 
+def natural_key(value: str):
+	"""Sort C2 before C10."""
+	return [int(part) if part.isdigit() else part for part in re.split(r"(\d+)", value or "")]
+
+
 def normalize_mobile(mobile: str | None) -> str:
 	"""Return the last 10 digits of a mobile number ("+91 98765-43210" -> "9876543210")."""
 	digits = re.sub(r"\D", "", mobile or "")

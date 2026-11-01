@@ -4,7 +4,7 @@ import base64
 import mimetypes
 
 import frappe
-from frappe.utils import getdate, nowdate
+from frappe.utils import flt, getdate, nowdate
 
 from pathshala.pathshala.doctype.student.student import qr_data_uri
 from pathshala.utils import fmt_time
@@ -16,7 +16,7 @@ def get_id_card_data(student: str) -> dict:
 	booking = frappe.db.get_value(
 		"Seat Booking",
 		{"student": student, "docstatus": 1, "status": "Active", "to_date": (">=", today)},
-		["branch", "zone", "seat", "booking_type", "shift", "from_time", "to_time", "to_date"],
+		["branch", "zone", "seat", "booking_type", "shift", "from_time", "to_time", "to_date", "seat_mode", "hours_per_day"],
 		as_dict=True,
 		order_by="to_date desc",
 	)
@@ -40,13 +40,25 @@ def get_id_card_data(student: str) -> dict:
 		"girls_only": False,
 	}
 	if booking:
-		zone = frappe.db.get_value("Study Zone", booking.zone, ["zone_name", "gender_policy"], as_dict=True)
+		zone = (
+			frappe.db.get_value("Study Zone", booking.zone, ["zone_name", "gender_policy"], as_dict=True)
+			if booking.zone
+			else frappe._dict()
+		)
+		hours = f"{flt(booking.hours_per_day):g} hrs/day" if booking.hours_per_day else ""
+		if booking.seat_mode == "Flexi":
+			seat, slot = "FLEXI", f"{hours} · any free seat"
+		elif hours:
+			seat, slot = frappe.db.get_value("Seat", booking.seat, "seat_no"), f"{hours} · reserved seat"
+		else:
+			seat = frappe.db.get_value("Seat", booking.seat, "seat_no")
+			slot = f"{booking.shift or booking.booking_type} · {fmt_time(booking.from_time)}–{fmt_time(booking.to_time)}"
 		data.update(
 			branch=booking.branch,
-			seat=frappe.db.get_value("Seat", booking.seat, "seat_no"),
-			zone=zone.zone_name,
+			seat=seat,
+			zone=zone.zone_name or ("Girls / Co-ed" if doc.gender == "Female" else "Co-ed"),
 			girls_only=zone.gender_policy == "Girls Only",
-			slot=f"{booking.shift or booking.booking_type} · {fmt_time(booking.from_time)}–{fmt_time(booking.to_time)}",
+			slot=slot,
 			valid_till=booking.to_date,
 		)
 	return data
