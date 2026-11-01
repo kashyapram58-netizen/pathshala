@@ -23,6 +23,9 @@ pathshala/
   hooks.py          scheduler, after_migrate, jinja, app_include_css, branding (app_logo_url, favicon, apps screen)
   setup.py          after_migrate: roles, syncs Custom HTML Blocks from workspace_blocks/, sets
                     System Settings.default_app = pathshala (only if empty) so login lands on /app/pathshala
+  bulk.py           create_seats / create_lockers (prefix + start + count, skips existing, max 500) + next_*_number
+  public/js/pathshala.js   desk helpers (app_include_js): pathshala.bulk_seats() / pathshala.bulk_lockers() dialogs,
+                    used by the Study Zone and Pathshala Branch forms and the Seat and Locker list views
   id_card.py        get_id_card_data() for the "Pathshala ID Card" print format (embeds logo/photo/QR as data URIs)
   workspace_blocks/ source of the "Pathshala Overview" Custom HTML Block (html/css/js, shadow DOM, `root_element`)
   utils.py          shared helpers: mobile normalising, time maths, fee status,
