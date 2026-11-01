@@ -1,0 +1,46 @@
+{% extends "frappe/www/login.html" %}
+
+{#- Re-skin of Frappe's login: the form markup and login.js come from frappe/www/login.html. -#}
+
+{%- block navbar -%}{%- endblock -%}
+{%- block footer -%}{%- endblock -%}
+
+{% block head_include %}
+{{ super() }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/pathshala/css/login.css?v={{ css_version }}">
+{% endblock %}
+
+{% block content %}
+<div class="psl-bg" aria-hidden="true">
+	<span class="psl-blob psl-blob-1"></span>
+	<span class="psl-blob psl-blob-2"></span>
+	<span class="psl-blob psl-blob-3"></span>
+	<span class="psl-blob psl-blob-4"></span>
+	<span class="psl-grid"></span>
+</div>
+
+<div class="psl-shell">
+	<aside class="psl-hero">
+		<div class="psl-hero-logo glass">
+			<img src="{{ full_logo }}" alt="Pathshala, Library and Self Study Centre">
+		</div>
+		<h1 class="psl-headline">Focus. Study.<br><span>Achieve.</span></h1>
+		<p class="psl-tagline">A calm, dedicated space for every aspirant. Manage seats, shifts, lockers and attendance in one place.</p>
+		<ul class="psl-chips">
+			<li class="glass"><span class="psl-dot psl-dot-blue"></span>Seats &amp; Shifts</li>
+			<li class="glass"><span class="psl-dot psl-dot-teal"></span>Lockers</li>
+			<li class="glass"><span class="psl-dot psl-dot-lime"></span>Kiosk Check-in</li>
+		</ul>
+	</aside>
+
+	<main class="psl-auth">
+		<div class="psl-card glass">
+			{{ self.page_content() }}
+		</div>
+		<p class="psl-foot">© {{ frappe.utils.nowdate()[:4] }} Pathshala · Library and Self Study Centre</p>
+	</main>
+</div>
+{% endblock %}

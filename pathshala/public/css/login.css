@@ -1,0 +1,285 @@
+/* Pathshala glass login. Scoped to body.psl-login so nothing else on the site is affected. */
+body.psl-login {
+	--psl-blue: #3c6df5;
+	--psl-blue-deep: #1e3cf4;
+	--psl-teal: #6ccab7;
+	--psl-lime: #adfc54;
+	--psl-ink: #0f1b4c;
+	--psl-ink-soft: #4a5680;
+	--psl-glass: rgba(255, 255, 255, 0.55);
+	--psl-glass-strong: rgba(255, 255, 255, 0.72);
+	--psl-glass-border: rgba(255, 255, 255, 0.75);
+	--psl-shadow: 0 30px 80px -20px rgba(30, 60, 244, 0.35), 0 8px 24px -8px rgba(15, 27, 76, 0.18);
+
+	min-height: 100vh;
+	margin: 0;
+	background: #eef3ff !important;
+	color: var(--psl-ink);
+	font-family: "Poppins", "Inter", system-ui, sans-serif;
+	overflow-x: hidden;
+}
+
+/* ---------------------------------------------------------------- background */
+.psl-bg {
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	overflow: hidden;
+	background:
+		radial-gradient(1200px 800px at 10% 10%, #dfe8ff 0%, transparent 60%),
+		radial-gradient(900px 700px at 90% 90%, #e3fbf4 0%, transparent 60%),
+		linear-gradient(135deg, #eef3ff 0%, #f5fbff 50%, #f2ffe6 100%);
+}
+.psl-blob {
+	position: absolute;
+	border-radius: 50%;
+	filter: blur(70px);
+	opacity: 0.7;
+	animation: psl-float 18s ease-in-out infinite alternate;
+}
+.psl-blob-1 { width: 520px; height: 520px; background: var(--psl-blue); top: -140px; left: -120px; }
+.psl-blob-2 { width: 420px; height: 420px; background: var(--psl-teal); bottom: -120px; right: 8%; animation-delay: -6s; }
+.psl-blob-3 { width: 320px; height: 320px; background: var(--psl-lime); top: 35%; right: -80px; opacity: 0.55; animation-delay: -12s; }
+.psl-blob-4 { width: 260px; height: 260px; background: var(--psl-blue-deep); bottom: 10%; left: 30%; opacity: 0.35; animation-delay: -3s; }
+.psl-grid {
+	position: absolute;
+	inset: 0;
+	background-image:
+		linear-gradient(rgba(60, 109, 245, 0.06) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(60, 109, 245, 0.06) 1px, transparent 1px);
+	background-size: 44px 44px;
+	mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+	-webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+}
+@keyframes psl-float {
+	0% { transform: translate(0, 0) scale(1); }
+	50% { transform: translate(40px, -30px) scale(1.08); }
+	100% { transform: translate(-30px, 40px) scale(0.95); }
+}
+@media (prefers-reduced-motion: reduce) {
+	.psl-blob { animation: none; }
+}
+
+/* ---------------------------------------------------------------- glass */
+.psl-login .glass {
+	background: var(--psl-glass);
+	border: 1px solid var(--psl-glass-border);
+	backdrop-filter: blur(22px) saturate(170%);
+	-webkit-backdrop-filter: blur(22px) saturate(170%);
+	box-shadow: var(--psl-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* ---------------------------------------------------------------- layout */
+.psl-shell {
+	position: relative;
+	z-index: 1;
+	min-height: 100vh;
+	display: grid;
+	grid-template-columns: 1.1fr 1fr;
+	align-items: center;
+	gap: 48px;
+	max-width: 1180px;
+	margin: 0 auto;
+	padding: 40px 32px;
+	box-sizing: border-box;
+}
+.psl-shell > * { min-width: 0; }
+.psl-login .psl-card, .psl-login .psl-card * { box-sizing: border-box; }
+
+.psl-hero { padding-right: 12px; animation: psl-rise 0.7s ease-out both; }
+.psl-hero-logo {
+	display: inline-flex;
+	padding: 18px 26px;
+	border-radius: 24px;
+	margin-bottom: 36px;
+}
+.psl-hero-logo img { height: 120px; width: auto; display: block; }
+.psl-headline {
+	font-size: 54px;
+	line-height: 1.08;
+	font-weight: 700;
+	letter-spacing: -1px;
+	color: var(--psl-ink);
+	margin: 0 0 18px;
+}
+.psl-headline span {
+	background: linear-gradient(90deg, var(--psl-blue-deep), var(--psl-blue) 45%, var(--psl-teal) 80%, #7fd63a);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+.psl-tagline { font-size: 17px; line-height: 1.6; color: var(--psl-ink-soft); max-width: 460px; margin: 0 0 28px; }
+.psl-chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 12px; }
+.psl-chips li {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 16px;
+	border-radius: 999px;
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--psl-ink);
+	box-shadow: 0 6px 18px -8px rgba(15, 27, 76, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+.psl-dot { width: 10px; height: 10px; border-radius: 50%; }
+.psl-dot-blue { background: var(--psl-blue); }
+.psl-dot-teal { background: var(--psl-teal); }
+.psl-dot-lime { background: #8be03a; }
+
+.psl-auth { display: flex; flex-direction: column; align-items: center; animation: psl-rise 0.7s 0.12s ease-out both; }
+.psl-card {
+	width: 100%;
+	max-width: 420px;
+	border-radius: 28px;
+	padding: 36px 34px 30px;
+	position: relative;
+	overflow: hidden;
+}
+.psl-card::before {
+	/* glossy highlight */
+	content: "";
+	position: absolute;
+	inset: -40% -40% auto auto;
+	width: 260px;
+	height: 260px;
+	background: radial-gradient(circle, rgba(255, 255, 255, 0.85), transparent 65%);
+	pointer-events: none;
+}
+.psl-foot { margin-top: 18px; font-size: 12.5px; color: var(--psl-ink-soft); opacity: 0.85; text-align: center; }
+
+@keyframes psl-rise {
+	from { opacity: 0; transform: translateY(18px); }
+	to { opacity: 1; transform: none; }
+}
+
+/* ---------------------------------------------------------------- Frappe form inside the card */
+.psl-login .psl-card section { max-width: none; margin: 0; padding: 0; }
+.psl-login .psl-card .page-card,
+.psl-login .psl-card .login-content {
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	max-width: none !important;
+}
+.psl-login .psl-card .page-card-head { text-align: center; padding: 0 0 22px !important; position: relative; }
+.psl-login .psl-card form { max-width: none !important; }
+.psl-login .psl-card .page-card-head .app-logo {
+	width: 68px !important;
+	height: 68px !important;
+	max-height: none !important;
+	object-fit: contain;
+	padding: 6px;
+	border-radius: 18px;
+	background: rgba(255, 255, 255, 0.85);
+	box-shadow: 0 10px 24px -10px rgba(30, 60, 244, 0.45);
+	margin-bottom: 14px;
+}
+.psl-login .psl-card .page-card-head h4 { font-size: 22px; font-weight: 600; color: var(--psl-ink); margin: 0; }
+.psl-login .psl-card .page-card-body { padding: 0 !important; }
+.psl-login .psl-card .form-group { margin-bottom: 14px; }
+
+.psl-login .psl-card .form-control {
+	height: 50px;
+	border-radius: 14px;
+	background: rgba(255, 255, 255, 0.7) !important;
+	border: 1px solid rgba(60, 109, 245, 0.18) !important;
+	color: var(--psl-ink);
+	font-size: 15px;
+	padding-left: 44px !important;
+	box-shadow: inset 0 1px 2px rgba(15, 27, 76, 0.05);
+	transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.psl-login .psl-card .form-control::placeholder { color: #8a94b8; }
+.psl-login .psl-card .form-control:focus {
+	background: #fff !important;
+	border-color: var(--psl-blue) !important;
+	box-shadow: 0 0 0 4px rgba(60, 109, 245, 0.15) !important;
+	outline: none;
+}
+.psl-login .psl-card .field-icon { left: 16px !important; top: 50% !important; transform: translateY(-50%); color: var(--psl-blue); }
+.psl-login .psl-card .field-icon use, .psl-login .psl-card .field-icon path { stroke: var(--psl-blue); }
+.psl-login .psl-card .toggle-password {
+	top: 50% !important;
+	transform: translateY(-50%);
+	right: 14px !important;
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var(--psl-blue) !important;
+	cursor: pointer;
+}
+.psl-login .psl-card .forgot-password-message { text-align: right; margin: 4px 0 18px; }
+.psl-login .psl-card a { color: var(--psl-blue-deep); font-weight: 500; }
+.psl-login .psl-card a:hover { color: var(--psl-blue); text-decoration: none; }
+
+.psl-login .psl-card .page-card-actions { padding: 0 !important; }
+.psl-login .psl-card .btn-primary {
+	height: 50px;
+	border: 0;
+	border-radius: 14px;
+	font-size: 15.5px;
+	font-weight: 600;
+	letter-spacing: 0.2px;
+	color: #fff;
+	background: linear-gradient(135deg, var(--psl-blue-deep) 0%, var(--psl-blue) 55%, #4f8bff 100%);
+	box-shadow: 0 14px 28px -12px rgba(30, 60, 244, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+	transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
+}
+.psl-login .psl-card .btn-primary:hover { transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 18px 34px -12px rgba(30, 60, 244, 0.75); }
+.psl-login .psl-card .btn-primary:active { transform: translateY(0); }
+.psl-login .psl-card .btn-default,
+.psl-login .psl-card .btn-login-option {
+	height: 48px;
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	border-radius: 14px;
+	background: rgba(255, 255, 255, 0.6) !important;
+	border: 1px solid rgba(60, 109, 245, 0.18) !important;
+	color: var(--psl-ink) !important;
+	font-weight: 500;
+	box-shadow: 0 6px 16px -10px rgba(15, 27, 76, 0.3) !important;
+	transition: background 0.2s, border-color 0.2s;
+}
+.psl-login .psl-card .btn-login-option:hover { background: #fff !important; border-color: var(--psl-blue) !important; }
+.psl-login .psl-card .social-logins,
+.psl-login .psl-card .social-login-buttons { padding: 0 !important; margin: 0 !important; width: 100%; }
+.psl-login .psl-card .login-button-wrapper { padding: 0 !important; width: 100%; }
+.psl-login .psl-card .login-divider { margin: 18px 0; color: var(--psl-ink-soft); }
+.psl-login .psl-card .sign-up-message { margin-top: 16px; color: var(--psl-ink-soft); font-size: 14px; }
+
+/* ---------------------------------------------------------------- dark mode */
+@media (prefers-color-scheme: dark) {
+	body.psl-login {
+		--psl-ink: #eef2ff;
+		--psl-ink-soft: #b4bde0;
+		--psl-glass: rgba(20, 28, 64, 0.5);
+		--psl-glass-border: rgba(255, 255, 255, 0.14);
+		background: #0b1030 !important;
+	}
+	.psl-bg { background: linear-gradient(135deg, #0b1030 0%, #0e1a4a 55%, #0b2a2a 100%); }
+	.psl-blob { opacity: 0.45; }
+	.psl-login .glass { box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+	.psl-hero-logo { background: rgba(255, 255, 255, 0.92) !important; }
+	.psl-card::before { opacity: 0.12; }
+	.psl-login .psl-card .form-control { background: rgba(255, 255, 255, 0.08) !important; border-color: rgba(255, 255, 255, 0.16) !important; color: #fff; }
+	.psl-login .psl-card .form-control:focus { background: rgba(255, 255, 255, 0.12) !important; }
+	.psl-login .psl-card a { color: #8fb0ff; }
+	.psl-login .psl-card .btn-default,
+	.psl-login .psl-card .btn-login-option { background: rgba(255, 255, 255, 0.08) !important; color: #fff !important; border-color: rgba(255, 255, 255, 0.16) !important; }
+}
+
+/* ---------------------------------------------------------------- responsive */
+@media (max-width: 960px) {
+	.psl-shell { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 28px 16px; align-content: center; }
+	.psl-hero { text-align: center; padding: 0; }
+	.psl-hero-logo { margin-bottom: 0; padding: 12px 18px; }
+	.psl-hero-logo img { height: 84px; }
+	.psl-headline, .psl-tagline, .psl-chips { display: none; }
+	.psl-login .psl-card .page-card-head .app-logo { display: none; }
+}
+@media (max-width: 480px) {
+	.psl-card { padding: 28px 20px 24px; border-radius: 22px; }
+}

@@ -1,0 +1,148 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-11-01 11:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "locker_no",
+  "branch",
+  "zone",
+  "gender_policy",
+  "column_break_1",
+  "size",
+  "status",
+  "current_allocation",
+  "current_student",
+  "under_maintenance",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "locker_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Locker No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Branch",
+   "options": "Pathshala Branch",
+   "reqd": 1
+  },
+  {
+   "description": "Optional. Lockers inside a Girls Only zone can only be rented to female students.",
+   "fieldname": "zone",
+   "fieldtype": "Link",
+   "label": "Zone",
+   "options": "Study Zone"
+  },
+  {
+   "fetch_from": "zone.gender_policy",
+   "fieldname": "gender_policy",
+   "fieldtype": "Data",
+   "label": "Gender Policy",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Medium",
+   "fieldname": "size",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Size",
+   "options": "Small\nMedium\nLarge",
+   "reqd": 1
+  },
+  {
+   "default": "Available",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "no_copy": 1,
+   "options": "Available\nOccupied\nOverdue\nMaintenance",
+   "read_only": 1
+  },
+  {
+   "fieldname": "current_allocation",
+   "fieldtype": "Link",
+   "label": "Current Allocation",
+   "no_copy": 1,
+   "options": "Locker Allocation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "current_student",
+   "fieldtype": "Data",
+   "label": "Current Student",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "under_maintenance",
+   "fieldtype": "Check",
+   "label": "Under Maintenance"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-11-01 11:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pathshala",
+ "name": "Locker",
+ "naming_rule": "By script",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pathshala Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pathshala Staff",
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
